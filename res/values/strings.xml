@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TransmitLater</string>
+    <string name="action_settings">Settings</string>
+    <string name="select_date_header">Selected Date: </string>
+    <string name="Date_Picker_Button_Text">Date</string>
+    <string name="select_time_header_text">Selected Time: </string>
+    <string name="select_time_hour_inputBox_hint">HH</string>
+    <string name="select_time_minute_inputBox_hint">MM</string>
+    <string name="time_picker_button_text">Time</string>
+    <string name="contact_header_text">Select Contact: </string>
+    <string name="contact_inputBox_hint">Insert Contact Here</string>
+    <string name="contact_button_text">Contacts</string>
+    <string name="message_title_header_text">Message Title: </string>
+    <string name="message_title_inputBox_hint">Insert Title Here </string>
+    <string name="message_body_header_text">Message Body: </string>
+    <string name="message_body_inputBox_hint">Insert Message Here</string>
+    <string name="send_button_text">QUEUE MESSAGE</string>
+    <string name="action_messages">Messages</string>
+
+</resources>

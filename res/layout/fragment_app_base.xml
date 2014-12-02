@@ -1,0 +1,224 @@
+<!-- The scroll view adds the scroll bar -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000" >
+
+	<RelativeLayout
+	    android:id="@+id/RelativeLayout01"
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:background="#000000"
+	    android:paddingBottom="@dimen/activity_vertical_margin"
+	    android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_vertical_margin" >
+	    
+		<!-- Color code reference: -->
+		<!-- #000000 is black -->
+		<!-- #FFFFFF is white -->
+		<!-- #FF888888 is gray -->
+		<!-- #FF444444 is dark gray -->
+		<!-- #FFCCCCCC is light gray -->
+	   	
+	    <!-- Top Row -->
+	    <TextView
+	        android:id="@+id/Select_Date_Header"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:textColor="#FFFFFF"
+	        style="@android:style/TextAppearance.Medium"
+	        android:text="@string/select_date_header" />
+	    
+	    <!-- 2nd Row -->
+	    
+	    <TextView
+	        android:id="@+id/Selected_Date_TextView"
+	        style="@android:style/TextAppearance.Large"
+	        android:layout_width="190dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/Select_Date_Header"
+	        android:layout_marginTop="10dp"
+	        android:background="#FF444444"
+	        android:fontFamily="sans-serif-thin"
+	        android:text="No Date Selected"
+	        android:textColor="#FFFFFF" />
+	    
+	    <Button
+	        android:id="@+id/Date_Picker_Button"
+	        style="@android:style/TextAppearance.Medium"
+	        android:layout_width="50dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@id/Select_Date_Header"
+	        android:layout_marginTop="10dp"
+	        android:layout_toRightOf="@id/Selected_Date_TextView"
+	        android:layout_alignBaseline="@id/Selected_Date_TextView"
+	        android:onClick="showDatePickerDialog"
+	        android:text="@string/Date_Picker_Button_Text"
+	        android:textColor="#FFFFFF" />
+	    
+	    <!-- Third Row -->
+	    <TextView 
+	        android:id="@+id/Select_Time_Header"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Selected_Date_TextView"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:background="#000000"
+	        android:textColor="#FFFFFF"
+	        style="@android:style/TextAppearance.Medium"
+	        android:text="@string/select_time_header_text"  />
+	        
+	    <!-- Fourth Row -->
+	    
+	    <TextView
+	        android:id="@+id/Selected_Time_TextView"
+	        style="@android:style/TextAppearance.Large"
+	        android:layout_width="190dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_below="@id/Select_Time_Header"
+	        android:layout_marginTop="10dp"
+	        android:background="#FF444444"
+	        android:fontFamily="sans-serif-thin"
+	        android:text="No Time Selected"
+	        android:textColor="#FFFFFF" />
+	    
+	    <Button
+	        android:id="@+id/Time_Picker_Button"
+	        style="@android:style/TextAppearance.Medium"
+	        android:layout_width="50dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/Selected_Time_TextView"
+	        android:layout_alignLeft="@+id/Date_Picker_Button"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@id/Select_Time_Header"
+	        android:layout_marginTop="10dp"
+	        android:onClick="showTimePickerDialog"
+	        android:text="@string/time_picker_button_text"
+	        android:textColor="#FFFFFF" />
+	    
+	    <!-- Fifth Row -->
+	    <TextView
+	        android:id="@+id/Contact_Header"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Selected_Time_TextView"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:background="#000000"
+	        android:textColor="#FFFFFF"
+	        style="@android:style/TextAppearance.Medium"
+	        android:text="@string/contact_header_text" />
+	    
+	    <!--  Sixth Row -->
+	   
+	    <TextView
+	        android:id="@+id/Selected_Contacts_TextView"
+	        style="@android:style/TextAppearance.Large"
+	        android:layout_width="190dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignRight="@+id/Selected_Time_TextView"
+	        android:layout_below="@id/Contact_Header"
+	        android:layout_marginTop="10dp"
+	        android:background="#FF444444"
+	        android:fontFamily="sans-serif-thin"
+	        android:text="Select A Contact"
+	        android:textColor="#FFFFFF" />
+
+	    <Button
+	        android:id="@+id/Select_Contact_Button"
+	        style="@android:style/TextAppearance.Medium"
+	        android:layout_width="50dp"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/Time_Picker_Button"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@id/Contact_Header"
+	        android:layout_marginTop="10dp"
+	        android:onClick="showListOfContacts"
+	        android:text="@string/contact_button_text"
+	        android:textColor="#FFFFFF" />
+	    
+	    <!-- Seventh Row -->
+	    <TextView
+	        android:id="@+id/Message_Title_Header"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Selected_Contacts_TextView"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:background="#000000"
+	        android:textColor="#FFFFFF"
+	        style="@android:style/TextAppearance.Medium"
+	        android:text="@string/message_title_header_text" />
+	    
+	    <!-- Eighth row -->
+	    <EditText 
+	        android:id="@+id/Message_Title_inputBox"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Message_Title_Header"
+	        android:inputType="text"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:background="#FF444444"
+	        android:textColor="#FFFFFF"
+	        android:fontFamily="sans-serif-thin"
+	        android:text="@string/message_title_inputBox_hint" />
+	    
+	    <!--  Nineth row -->
+	    <TextView 
+	        android:id="@+id/Message_Body_Header"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Message_Title_inputBox"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:background="#000000"
+	        android:textColor="#FFFFFF"
+	        style="@android:style/TextAppearance.Medium"
+	        android:text="@string/message_body_header_text" />
+	    
+	    <!--  Tenth row -->
+	    <EditText 
+	        android:id="@+id/Message_Body_inputBox"  
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Message_Body_Header"
+	        android:inputType="text"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:background="#FF444444"
+	        android:textColor="#FFFFFF"
+	        android:fontFamily="sans-serif-thin"
+	        android:hint="@string/message_body_inputBox_hint" />
+	    
+	    <!--  Eleventh row -->
+	    <Button
+	        android:id="@+id/Queue_Button"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/Message_Body_inputBox"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="10dp"
+	        android:textColor="#FFFFFF"
+	        style="@android:style/TextAppearance.Large"
+	        android:text="@string/send_button_text" />
+
+	    <Button
+	        android:id="@+id/btnSend"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/Queue_Button"
+	        android:layout_alignRight="@+id/Message_Body_inputBox"
+	        android:textColor="#FFFFFF"
+	        android:text="Send" />
+	        
+	   </RelativeLayout>
+	  </ScrollView>

@@ -44,7 +44,7 @@
 	        android:layout_marginTop="10dp"
 	        android:background="#FF444444"
 	        android:fontFamily="sans-serif-thin"
-	        android:text="No Date Selected"
+	        android:hint="No Date Selected"
 	        android:textColor="#FFFFFF" />
 	    
 	    <Button
@@ -86,7 +86,7 @@
 	        android:layout_marginTop="10dp"
 	        android:background="#FF444444"
 	        android:fontFamily="sans-serif-thin"
-	        android:text="No Time Selected"
+	        android:hint="No Time Selected"
 	        android:textColor="#FFFFFF" />
 	    
 	    <Button
@@ -118,8 +118,8 @@
 	    
 	    <!--  Sixth Row -->
 	   
-	    <TextView
-	        android:id="@+id/Selected_Contacts_TextView"
+	    <EditText
+	        android:id="@+id/Selected_Contact_EditText"
 	        style="@android:style/TextAppearance.Large"
 	        android:layout_width="190dp"
 	        android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
 	        android:layout_marginTop="10dp"
 	        android:background="#FF444444"
 	        android:fontFamily="sans-serif-thin"
-	        android:text="Select A Contact"
+	        android:hint="Select A Contact"
 	        android:textColor="#FFFFFF" />
 
 	    <Button
@@ -139,6 +139,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignLeft="@+id/Time_Picker_Button"
 	        android:layout_alignParentRight="true"
+	        android:layout_alignBaseline="@id/Selected_Contact_EditText"
 	        android:layout_below="@id/Contact_Header"
 	        android:layout_marginTop="10dp"
 	        android:onClick="showListOfContacts"
@@ -150,7 +151,7 @@
 	        android:id="@+id/Message_Title_Header"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@id/Selected_Contacts_TextView"
+	        android:layout_below="@id/Selected_Contact_EditText"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
 	        android:background="#000000"
@@ -207,9 +208,10 @@
 	        android:layout_below="@id/Message_Body_inputBox"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
+	        android:text="@string/send_button_text"
 	        android:textColor="#FFFFFF"
 	        style="@android:style/TextAppearance.Large"
-	        android:text="@string/send_button_text" />
+	         />
 
 	    <Button
 	        android:id="@+id/btnSend"
@@ -217,6 +219,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignBottom="@+id/Queue_Button"
 	        android:layout_alignRight="@+id/Message_Body_inputBox"
+	        android:onClick="sendSMS"
 	        android:textColor="#FFFFFF"
 	        android:text="Send" />
 	        

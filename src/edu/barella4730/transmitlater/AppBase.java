@@ -38,9 +38,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -67,14 +70,14 @@ import android.telephony.SmsManager;
 public class AppBase extends FragmentActivity {
 
 	//global variables
-	static Button sendBtn;
-	static Button queueBtn;
 	static TextView selectedDateTextView;
 	static TextView selectedTimeTextView;
-	static TextView selectedContactsTextView;
+	static EditText selectedContactTextView;
+	static EditText messageInput;
 	String selectedDateText;
 	String selectedTimeText;
-	String selectedContactsText;
+	String contactPhoneNumber;
+	String smsMessage;
 	
 	
 	@Override
@@ -103,7 +106,8 @@ public class AppBase extends FragmentActivity {
 					{
 						String number = c.getString(0);
 						int type = c.getInt(1);
-						selectedContactsTextView.setText(number);//put the selected contacts number in the textview
+						selectedContactTextView.setText(number);//put the selected contacts number in the textview
+						contactPhoneNumber = selectedContactTextView.getText().toString();
 						//showSelectedNumber(type, number); //type tells you the type of number; mobile 2, home 1, work 3
 					}
 				}//end of try block
@@ -156,25 +160,10 @@ public class AppBase extends FragmentActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_app_base, container, false);
 			//Place fragment items here
-			sendBtn = (Button) rootView.findViewById(R.id.btnSend);
-			queueBtn = (Button) rootView.findViewById(R.id.Queue_Button);
 			selectedDateTextView= (TextView) rootView.findViewById(R.id.Selected_Date_TextView);
 			selectedTimeTextView= (TextView) rootView.findViewById(R.id.Selected_Time_TextView);
-			selectedContactsTextView= (TextView) rootView.findViewById(R.id.Selected_Contacts_TextView);
-			
-			sendBtn.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					/*String phoneNo = txtPhoneNo.getText().toString();
-					//String message = txtMessage.getText().toString();                 
-					if (phoneNo.length()>0 && message.length()>0)                
-						sendSMS(phoneNo, message);                
-					else
-						Toast.makeText(getBaseContext(), 
-							"Please enter both phone number and message.", Toast.LENGTH_SHORT).show();*/
-				}
-			});
+			selectedContactTextView= (EditText) rootView.findViewById(R.id.Selected_Contact_EditText);
+			messageInput= (EditText) rootView.findViewById(R.id.Message_Body_inputBox);		
 			setRetainInstance(true);
 			return rootView;
 			
@@ -203,6 +192,71 @@ public class AppBase extends FragmentActivity {
 		intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
 		startActivityForResult(intent, 1);
 	}//end of showListOfContacts
+
+	//Send sms
+	public void sendSMS(View v)
+	{	       
+		String SENT = "SMS_SENT";
+		String DELIVERED = "SMS_DELIVERED";
+		
+		smsMessage = messageInput.getText().toString();
+
+		PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
+
+		PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,	new Intent(DELIVERED), 0);
+
+		//---when the SMS has been sent---
+		registerReceiver(new BroadcastReceiver(){
+			@Override
+			public void onReceive(Context arg0, Intent arg1) {
+				switch (getResultCode()) {
+				case Activity.RESULT_OK:
+					Toast.makeText(getBaseContext(), "SMS sent", Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+					Toast.makeText(getBaseContext(), "Generic failure",	Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_NO_SERVICE:
+					Toast.makeText(getBaseContext(), "No service", 	Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_NULL_PDU:
+					Toast.makeText(getBaseContext(), "Null PDU", Toast.LENGTH_SHORT).show();
+					break;
+				case SmsManager.RESULT_ERROR_RADIO_OFF:
+					Toast.makeText(getBaseContext(), "Radio off",	Toast.LENGTH_SHORT).show();
+					break;
+				}
+			}
+		}, new IntentFilter(SENT));
+
+		//---when the SMS has been delivered---
+		registerReceiver(new BroadcastReceiver(){
+			@Override
+			public void onReceive(Context arg0, Intent arg1) {
+				switch (getResultCode())
+				{
+				case Activity.RESULT_OK:
+					Toast.makeText(getBaseContext(), "SMS delivered",Toast.LENGTH_SHORT).show();
+					break;
+				case Activity.RESULT_CANCELED:
+					Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
+					break;                        
+				}
+			}
+		}, new IntentFilter(DELIVERED));        
+
+		/*
+		 * These two lines below actually send the message via an intent.
+		 * The default provider does not show up and this is backward compatible to 2.3.3  
+		 * 
+		 */
+	
+		SmsManager sms = SmsManager.getDefault();
+		
+		//if(contactPhoneNumber.length() > 0 && smsMessage.length() > 0){
+		sms.sendTextMessage(contactPhoneNumber, null, smsMessage, sentPI, deliveredPI);
+		//}
+	}
 	
 	//TimePicker class
 	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener
@@ -248,7 +302,7 @@ public class AppBase extends FragmentActivity {
 		
 		public void onDateSet(DatePicker view, int year, int month, int day)
 		{
-			//Do somthing with the date chosen by the user
+			//Do something with the date chosen by the user
 			selectedDateTextView.setText(Integer.toString(month) 
 										+ "/" + Integer.toString(day)
 										+ "/" + Integer.toString(year));
@@ -256,6 +310,5 @@ public class AppBase extends FragmentActivity {
 			Log.i("DatePickerFragment","The Date has been set to: " + month + " " + day + " " + year);
 		}//end of onDateSet
 	}//end of DatePickerFragment class
-
 	
 }//end of AppBase

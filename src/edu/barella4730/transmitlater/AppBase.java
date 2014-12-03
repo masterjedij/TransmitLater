@@ -24,16 +24,27 @@
 //Updated on 12/1/2014 by Chris Hamm
 	//Gave functionality to the Contacts button, it opens your contacts, and you select what contact you want
 	//After selecting the contact, it will add the contacts number to the contacts TextView
+//Updated on 12/2/2014 by Chris Hamm
+	//Adjusted the layout settings so that the keyboard doesn't automatically open when the app opens
+	//Corrected the row numbers in the XML file after the Message Title was removed
+	//Modified the inputTYpe of the message body inputText to capitalize the first letter of a sentence,
+	//	auto correct spelling, auto complete words,and allow multiple lines
+	//Implemented an AlarmManager that uses a pending intent for the Queue Message button
+	//		Changed Manifest File to include the intent action for the alarm manager
+	//		Added checks to make sure that a date and a time where selected, if meassage box was empty, if contact was selected
+	//		Added check to see if date is set in the past 
 
 
 package edu.barella4730.transmitlater;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.lang.Object;
 
 import edu.barella4730.transmitlater.R;
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -74,6 +85,12 @@ public class AppBase extends FragmentActivity {
 	static TextView selectedTimeTextView;
 	static EditText selectedContactTextView;
 	static EditText messageInput;
+	static int selectedDateYear = -1; //-1 is used to state that no date/time has been selected
+	static int selectedDateMonth = -1;
+	static int selectedDateDay = -1;
+	static int selectedTimeHour = -1;
+	static int selectedTimeMinute = -1;
+	static int selectedTimeSecond = -1;
 	String selectedDateText;
 	String selectedTimeText;
 	String contactPhoneNumber;
@@ -253,10 +270,132 @@ public class AppBase extends FragmentActivity {
 	
 		SmsManager sms = SmsManager.getDefault();
 		
-		//if(contactPhoneNumber.length() > 0 && smsMessage.length() > 0){
-		sms.sendTextMessage(contactPhoneNumber, null, smsMessage, sentPI, deliveredPI);
-		//}
-	}
+		if(contactPhoneNumber.length() > 0 && smsMessage.length() > 0)
+		{
+			if(smsMessage.length() > 160)
+			{
+				ArrayList<String> messagelist = sms.divideMessage(smsMessage);
+				sms.sendMultipartTextMessage(contactPhoneNumber, null, messagelist, null, null);
+
+			}
+			else
+			sms.sendTextMessage(contactPhoneNumber, null, smsMessage, sentPI, deliveredPI);
+		}
+	}//end of sendSMS
+	
+	public void queueMessage(View v) //called when the Queue Message button is pressed
+	{
+		boolean dateSelected= false;
+		boolean timeSelected= false;
+		boolean contactSelected= false;
+		boolean messageInputBoxNotEmpty= false;
+		boolean dateIsInTheFuture= false;
+		
+		//Checking to see if a Date has been Selected
+		if(selectedDateYear == -1 || selectedDateMonth == -1 || selectedDateDay == -1)
+		{
+			Toast.makeText(this, "ERROR: No Date has been selected!!",Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			dateSelected= true;
+		}
+		
+		//Checking to see if a time has been selected
+		if(selectedTimeHour == -1 || selectedTimeMinute == -1 || selectedTimeSecond == -1)
+		{
+			Toast.makeText(this,"ERROR: No Time has been Selected",Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			timeSelected= true;
+		}
+		
+		//Checking to make sure a contact is selected
+		if(selectedContactTextView.getText().toString().length() > 0 )
+		{
+			contactSelected= true;
+		}
+		else
+		{
+			Toast.makeText(this,"ERROR: No Contact has been Selected",Toast.LENGTH_LONG).show();
+		}
+		
+		//Checking to make sure message InputBox is not empty
+		if(messageInput.getText().toString().length() > 0)
+		{
+			messageInputBoxNotEmpty= true;
+		}
+		else
+		{
+			Toast.makeText(this,"ERROR: The Message Box is Empty!! ",Toast.LENGTH_LONG).show();
+		}
+		
+		//Checking to see if Date is in the past
+		Calendar c= Calendar.getInstance();
+		int year= c.get(Calendar.YEAR);
+		int month= c.get(Calendar.MONTH);
+		int day= c.get(Calendar.DAY_OF_MONTH);
+		int hour= c.get(Calendar.HOUR_OF_DAY);
+		int minute= c.get(Calendar.MINUTE);
+		if(year < selectedDateYear)
+		{
+			Toast.makeText(this,"ERROR: The Year is set in the past! ",Toast.LENGTH_LONG).show();
+		}
+		else if(month < selectedDateMonth)
+		{
+			Toast.makeText(this,"ERROR: The Month is in the past!! ",Toast.LENGTH_LONG).show();
+		}
+		else if(day < selectedDateDay)
+		{
+			Toast.makeText(this,"ERROR: The Day is in the Past!! ",Toast.LENGTH_LONG).show();
+		}
+		else if(hour < selectedTimeHour)
+		{
+			Toast.makeText(this,"ERROR: The Hour is in the past!!! ",Toast.LENGTH_LONG).show();
+			
+		}
+		else if(minute < selectedTimeMinute)
+		{
+			Toast.makeText(this,"ERROR: The Minutes is in the past!! ",Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			dateIsInTheFuture= true;
+		}
+		
+		
+		//only perform if both date and time have been selected!!!!!
+		//	and if a contact has been selected and if the message inputBox is not empty
+		//	and if date is not in the past
+		if(dateSelected== true && timeSelected== true && contactSelected == true && messageInputBoxNotEmpty == true
+				&& dateIsInTheFuture== true)
+		{
+			//Creating the intent and the pendingintent
+			Intent notificationIntent= new Intent("edu.barella4730.transmitlater");
+			PendingIntent contentsOfIntent= PendingIntent.getActivity(AppBase.this, 0, notificationIntent, 0);
+			
+			//Creating the alarmManager
+			AlarmManager alarmManager= (AlarmManager)getSystemService(ALARM_SERVICE);
+			
+			//Creating a calendar object that will represent the selected date and time in terms of milliseconds
+			Calendar calendar= Calendar.getInstance();
+			calendar.set(selectedDateYear, selectedDateMonth, selectedDateDay,
+					selectedTimeHour, selectedTimeMinute, selectedTimeSecond);
+			long eventTime = calendar.getTimeInMillis();
+			//Setting the alarm with the AlarmManager
+			alarmManager.set(AlarmManager.RTC_WAKEUP, eventTime, contentsOfIntent);
+			
+			Toast.makeText(this, "An Alarm manager has been set for: \n"
+					+selectedDateMonth+"/"+selectedDateDay+"/"+
+					selectedDateYear+ "\n" + "at "+ selectedTimeHour+":"+
+					selectedTimeMinute+":"+selectedTimeSecond,Toast.LENGTH_LONG).show();
+		}//end of if dateSelected and timeSelected ==true
+		else
+		{
+			Toast.makeText(this,  "No Message has been queued!!", Toast.LENGTH_LONG).show();
+		}
+	}//end of queueMessage
 	
 	//TimePicker class
 	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener
@@ -278,7 +417,11 @@ public class AppBase extends FragmentActivity {
 		{
 			//Do something with the time chosen by the user
 			selectedTimeTextView.setText(Integer.toString(hourOfDay)
-										+ ":" + Integer.toString(minute));				
+										+ ":" + Integer.toString(minute));
+			//Copy values to global variables
+			selectedTimeHour= hourOfDay;
+			selectedTimeMinute= minute;
+			selectedTimeSecond=0;
 			Log.i("TimePickerFragment","The time has been set to: " + hourOfDay +":"+ minute +" ");
 			
 		}//end of onTimeSet
@@ -303,10 +446,15 @@ public class AppBase extends FragmentActivity {
 		public void onDateSet(DatePicker view, int year, int month, int day)
 		{
 			//Do something with the date chosen by the user
-			selectedDateTextView.setText(Integer.toString(month) 
+			//correct the month by adding 1
+			int tempMonth= month + 1;
+			selectedDateTextView.setText(tempMonth 
 										+ "/" + Integer.toString(day)
 										+ "/" + Integer.toString(year));
-			
+			//Copy values to global variables
+			selectedDateYear= year;
+			selectedDateMonth= month;
+			selectedDateDay= day;
 			Log.i("DatePickerFragment","The Date has been set to: " + month + " " + day + " " + year);
 		}//end of onDateSet
 	}//end of DatePickerFragment class

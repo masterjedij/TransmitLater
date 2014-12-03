@@ -12,11 +12,9 @@
     <string name="contact_header_text">Select Contact: </string>
     <string name="contact_inputBox_hint">Insert Contact Here</string>
     <string name="contact_button_text">Contacts</string>
-    <string name="message_title_header_text">Message Title: </string>
-    <string name="message_title_inputBox_hint">Insert Title Here </string>
     <string name="message_body_header_text">Message Body: </string>
     <string name="message_body_inputBox_hint">Insert Message Here</string>
-    <string name="send_button_text">QUEUE MESSAGE</string>
+    <string name="send_button_text">Queue Message</string>
     <string name="action_messages">Messages</string>
 
 </resources>

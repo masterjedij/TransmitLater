@@ -8,8 +8,10 @@
 	<RelativeLayout
 	    android:id="@+id/RelativeLayout01"
 	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="500dp"
 	    android:background="#000000"
+	    android:focusable="true"
+	    android:focusableInTouchMode="true"
 	    android:paddingBottom="@dimen/activity_vertical_margin"
 	    android:paddingLeft="@dimen/activity_horizontal_margin"
 	    android:paddingRight="@dimen/activity_horizontal_margin"
@@ -146,39 +148,12 @@
 	        android:text="@string/contact_button_text"
 	        android:textColor="#FFFFFF" />
 	    
-	    <!-- Seventh Row -->
-	    <TextView
-	        android:id="@+id/Message_Title_Header"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@id/Selected_Contact_EditText"
-	        android:layout_alignParentLeft="true"
-	        android:layout_marginTop="10dp"
-	        android:background="#000000"
-	        android:textColor="#FFFFFF"
-	        style="@android:style/TextAppearance.Medium"
-	        android:text="@string/message_title_header_text" />
-	    
-	    <!-- Eighth row -->
-	    <EditText 
-	        android:id="@+id/Message_Title_inputBox"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@id/Message_Title_Header"
-	        android:inputType="text"
-	        android:layout_alignParentLeft="true"
-	        android:layout_marginTop="10dp"
-	        android:background="#FF444444"
-	        android:textColor="#FFFFFF"
-	        android:fontFamily="sans-serif-thin"
-	        android:text="@string/message_title_inputBox_hint" />
-	    
-	    <!--  Nineth row -->
+	    <!--  Seventh row -->
 	    <TextView 
 	        android:id="@+id/Message_Body_Header"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@id/Message_Title_inputBox"
+	        android:layout_below="@id/Selected_Contact_EditText"	        
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
 	        android:background="#000000"
@@ -186,21 +161,21 @@
 	        style="@android:style/TextAppearance.Medium"
 	        android:text="@string/message_body_header_text" />
 	    
-	    <!--  Tenth row -->
+	    <!--  Eighth row -->
 	    <EditText 
 	        android:id="@+id/Message_Body_inputBox"  
 	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="75dp"
 	        android:layout_below="@id/Message_Body_Header"
-	        android:inputType="text"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
 	        android:background="#FF444444"
 	        android:textColor="#FFFFFF"
+	        android:inputType="textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine"
 	        android:fontFamily="sans-serif-thin"
 	        android:hint="@string/message_body_inputBox_hint" />
 	    
-	    <!--  Eleventh row -->
+	    <!--  Nineth row -->
 	    <Button
 	        android:id="@+id/Queue_Button"
 	        android:layout_width="wrap_content"
@@ -208,6 +183,7 @@
 	        android:layout_below="@id/Message_Body_inputBox"
 	        android:layout_alignParentLeft="true"
 	        android:layout_marginTop="10dp"
+	        android:onClick="queueMessage"
 	        android:text="@string/send_button_text"
 	        android:textColor="#FFFFFF"
 	        style="@android:style/TextAppearance.Large"
@@ -221,7 +197,8 @@
 	        android:layout_alignRight="@+id/Message_Body_inputBox"
 	        android:onClick="sendSMS"
 	        android:textColor="#FFFFFF"
-	        android:text="Send" />
+	        android:text="Send" 
+	        style="@android:style/TextAppearance.Large"/>
 	        
 	   </RelativeLayout>
 	  </ScrollView>

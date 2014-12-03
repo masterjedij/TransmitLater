@@ -90,7 +90,6 @@ public class AppBase extends FragmentActivity {
 	static int selectedDateDay = -1;
 	static int selectedTimeHour = -1;
 	static int selectedTimeMinute = -1;
-	static int selectedTimeSecond = -1;
 	String selectedDateText;
 	String selectedTimeText;
 	String contactPhoneNumber;
@@ -214,13 +213,13 @@ public class AppBase extends FragmentActivity {
 	public void sendSMS(View v)
 	{	       
 		String SENT = "SMS_SENT";
-		String DELIVERED = "SMS_DELIVERED";
-		
 		smsMessage = messageInput.getText().toString();
+		//Toast.makeText(this, smsMessage, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, contactPhoneNumber, Toast.LENGTH_SHORT).show();		
 
 		PendingIntent sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
 
-		PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,	new Intent(DELIVERED), 0);
+		//PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,	new Intent(DELIVERED), 0);
 
 		//---when the SMS has been sent---
 		registerReceiver(new BroadcastReceiver(){
@@ -245,23 +244,7 @@ public class AppBase extends FragmentActivity {
 				}
 			}
 		}, new IntentFilter(SENT));
-
-		//---when the SMS has been delivered---
-		registerReceiver(new BroadcastReceiver(){
-			@Override
-			public void onReceive(Context arg0, Intent arg1) {
-				switch (getResultCode())
-				{
-				case Activity.RESULT_OK:
-					Toast.makeText(getBaseContext(), "SMS delivered",Toast.LENGTH_SHORT).show();
-					break;
-				case Activity.RESULT_CANCELED:
-					Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
-					break;                        
-				}
-			}
-		}, new IntentFilter(DELIVERED));        
-
+       
 		/*
 		 * These two lines below actually send the message via an intent.
 		 * The default provider does not show up and this is backward compatible to 2.3.3  
@@ -279,12 +262,13 @@ public class AppBase extends FragmentActivity {
 
 			}
 			else
-			sms.sendTextMessage(contactPhoneNumber, null, smsMessage, sentPI, deliveredPI);
+			sms.sendTextMessage(contactPhoneNumber, null, smsMessage, sentPI, null);
 		}
 	}//end of sendSMS
 	
 	public void queueMessage(View v) //called when the Queue Message button is pressed
 	{
+		smsMessage = messageInput.getText().toString();
 		boolean dateSelected= false;
 		boolean timeSelected= false;
 		boolean contactSelected= false;
@@ -302,7 +286,7 @@ public class AppBase extends FragmentActivity {
 		}
 		
 		//Checking to see if a time has been selected
-		if(selectedTimeHour == -1 || selectedTimeMinute == -1 || selectedTimeSecond == -1)
+		if(selectedTimeHour == -1 || selectedTimeMinute == -1)
 		{
 			Toast.makeText(this,"ERROR: No Time has been Selected",Toast.LENGTH_LONG).show();
 		}
@@ -338,24 +322,24 @@ public class AppBase extends FragmentActivity {
 		int day= c.get(Calendar.DAY_OF_MONTH);
 		int hour= c.get(Calendar.HOUR_OF_DAY);
 		int minute= c.get(Calendar.MINUTE);
-		if(year < selectedDateYear)
+		if(year > selectedDateYear)
 		{
 			Toast.makeText(this,"ERROR: The Year is set in the past! ",Toast.LENGTH_LONG).show();
 		}
-		else if(month < selectedDateMonth)
+		else if(month > selectedDateMonth)
 		{
 			Toast.makeText(this,"ERROR: The Month is in the past!! ",Toast.LENGTH_LONG).show();
 		}
-		else if(day < selectedDateDay)
+		else if(day > selectedDateDay)
 		{
 			Toast.makeText(this,"ERROR: The Day is in the Past!! ",Toast.LENGTH_LONG).show();
 		}
-		else if(hour < selectedTimeHour)
+		else if(hour > selectedTimeHour)
 		{
 			Toast.makeText(this,"ERROR: The Hour is in the past!!! ",Toast.LENGTH_LONG).show();
 			
 		}
-		else if(minute < selectedTimeMinute)
+		else if(minute > selectedTimeMinute)
 		{
 			Toast.makeText(this,"ERROR: The Minutes is in the past!! ",Toast.LENGTH_LONG).show();
 		}
@@ -373,7 +357,7 @@ public class AppBase extends FragmentActivity {
 		{
 			//Creating the intent and the pendingintent
 			Intent notificationIntent= new Intent("edu.barella4730.transmitlater");
-			PendingIntent contentsOfIntent= PendingIntent.getActivity(AppBase.this, 0, notificationIntent, 0);
+			PendingIntent contentsOfIntent= PendingIntent.getBroadcast(AppBase.this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
 			//Creating the alarmManager
 			AlarmManager alarmManager= (AlarmManager)getSystemService(ALARM_SERVICE);
@@ -381,7 +365,7 @@ public class AppBase extends FragmentActivity {
 			//Creating a calendar object that will represent the selected date and time in terms of milliseconds
 			Calendar calendar= Calendar.getInstance();
 			calendar.set(selectedDateYear, selectedDateMonth, selectedDateDay,
-					selectedTimeHour, selectedTimeMinute, selectedTimeSecond);
+					selectedTimeHour, selectedTimeMinute);
 			long eventTime = calendar.getTimeInMillis();
 			//Setting the alarm with the AlarmManager
 			alarmManager.set(AlarmManager.RTC_WAKEUP, eventTime, contentsOfIntent);
@@ -389,7 +373,9 @@ public class AppBase extends FragmentActivity {
 			Toast.makeText(this, "An Alarm manager has been set for: \n"
 					+selectedDateMonth+"/"+selectedDateDay+"/"+
 					selectedDateYear+ "\n" + "at "+ selectedTimeHour+":"+
-					selectedTimeMinute+":"+selectedTimeSecond,Toast.LENGTH_LONG).show();
+					selectedTimeMinute,Toast.LENGTH_LONG).show();
+			
+			
 		}//end of if dateSelected and timeSelected ==true
 		else
 		{
@@ -421,7 +407,6 @@ public class AppBase extends FragmentActivity {
 			//Copy values to global variables
 			selectedTimeHour= hourOfDay;
 			selectedTimeMinute= minute;
-			selectedTimeSecond=0;
 			Log.i("TimePickerFragment","The time has been set to: " + hourOfDay +":"+ minute +" ");
 			
 		}//end of onTimeSet

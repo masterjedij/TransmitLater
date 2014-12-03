@@ -356,7 +356,7 @@ public class AppBase extends FragmentActivity {
 				&& dateIsInTheFuture== true)
 		{
 			//Creating the intent and the pendingintent
-			Intent notificationIntent= new Intent("edu.barella4730.transmitlater");
+			Intent notificationIntent= new Intent(this, AlarmReceiver.class);
 			PendingIntent contentsOfIntent= PendingIntent.getBroadcast(AppBase.this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
 			//Creating the alarmManager
@@ -448,7 +448,9 @@ public class AppBase extends FragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
+			Toast.makeText(context,"before the sendSMS call in onRecieve",Toast.LENGTH_LONG).show();
 			sendSMS(getWindow().getDecorView().findViewById(android.R.id.content)); //the parameter retrieves the current view
+			Toast.makeText(context,"after the sendSMS call in onRecieve",Toast.LENGTH_LONG).show();
 		}
 	}
 }//end of AppBase

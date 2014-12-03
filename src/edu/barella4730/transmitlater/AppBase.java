@@ -444,4 +444,11 @@ public class AppBase extends FragmentActivity {
 		}//end of onDateSet
 	}//end of DatePickerFragment class
 	
+	public class AlarmReceiver extends BroadcastReceiver{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			sendSMS(getWindow().getDecorView().findViewById(android.R.id.content)); //the parameter retrieves the current view
+		}
+	}
 }//end of AppBase
